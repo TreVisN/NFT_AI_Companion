@@ -7278,6 +7278,8 @@ ScriptedImporter:
   skeletonAssetName: PSB_Character_Wolfman Skeleton
   secondarySpriteTextures:
   - name: _NormalMap
-    texture: {fileID: -8017776999675827104, guid: 7b102cf16c50e4ce8b9fe63869e3b1ef, type: 3}
+    texture: {fileID: -8017776999675827104, guid: 7b102cf16c50e4ce8b9fe63869e3b1ef,
+      type: 3}
   - name: _MaskTex
-    texture: {fileID: -8017776999675827104, guid: 28796c3fc259d4ecd8311359c54f667b, type: 3}
+    texture: {fileID: -8017776999675827104, guid: 28796c3fc259d4ecd8311359c54f667b,
+      type: 3}

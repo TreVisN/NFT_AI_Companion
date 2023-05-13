@@ -7811,6 +7811,8 @@ ScriptedImporter:
   skeletonAssetName: PSB_Character_Witch Skeleton
   secondarySpriteTextures:
   - name: _NormalMap
-    texture: {fileID: 1696056453592248886, guid: 761641beb1205481db73699360ec0cde, type: 3}
+    texture: {fileID: 1696056453592248886, guid: 761641beb1205481db73699360ec0cde,
+      type: 3}
   - name: _MaskTex
-    texture: {fileID: 1696056453592248886, guid: 2d830140bc78b4e42a634840d059ecb2, type: 3}
+    texture: {fileID: 1696056453592248886, guid: 2d830140bc78b4e42a634840d059ecb2,
+      type: 3}

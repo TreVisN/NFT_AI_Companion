@@ -7474,6 +7474,8 @@ ScriptedImporter:
   skeletonAssetName: PSB_Character_Knight Skeleton
   secondarySpriteTextures:
   - name: _NormalMap
-    texture: {fileID: 7912354389834489488, guid: a085c85d3d14b4c999f6aac2df0c26f3, type: 3}
+    texture: {fileID: 7912354389834489488, guid: a085c85d3d14b4c999f6aac2df0c26f3,
+      type: 3}
   - name: _MaskTex
-    texture: {fileID: -4569380420650726948, guid: e31b7c14dd3aa4360bf4feaf655a261a, type: 3}
+    texture: {fileID: -4569380420650726948, guid: e31b7c14dd3aa4360bf4feaf655a261a,
+      type: 3}

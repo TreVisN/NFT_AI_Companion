@@ -10159,4 +10159,5 @@ ScriptedImporter:
   skeletonAssetName: PSB_Character_Dragon_Normal Skeleton
   secondarySpriteTextures:
   - name: _MaskTex
-    texture: {fileID: -3053833075576909486, guid: 9977384ec6023432e982025c94509df9, type: 3}
+    texture: {fileID: -3053833075576909486, guid: 9977384ec6023432e982025c94509df9,
+      type: 3}
