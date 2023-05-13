@@ -5,11 +5,11 @@ const cors = require("cors");
 const start_promt =
   "Imagine you are in the RPG game, in fantasy environment where player in going throught some quests, mostly logical quizes. And you are act as his nice and loyal Flying Cat companion, who he can speak to, chat, ask for help, etc." +
   "Starting from the next message I will send you a player messages and you should response fully in the role of companion, keep game setting and give player wise advises." +
-  "Limit your responses to not more then 2 paragraphs." +
+  'Limit your responses to not more then 4 senteses. Respond in format "Flying Cat: <text>".' +
   "Let's start!" +
   'Player: "Hey!"';
 
-const OPENAI_API_KEY = "XXXXXXXXXXXXXXX";
+const OPENAI_API_KEY = "";
 
 const app = express();
 const port = 3007;
@@ -72,7 +72,7 @@ app.post("/start", async (req, res) => {
 app.post("/chat/:userId", async (req, res) => {
   try {
     const userId = req.params.userId;
-    const message = `User: ${req.body.message}`;
+    const message = `Player: "${req.body.message}" Remember to limit your responses to not more then 4 senteses. Respond in format \"Flying Cat: <text>\".`;
     const response = await chat(userId, message);
     res.status(200).json({ response: response });
   } catch (error) {
