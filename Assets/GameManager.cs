@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace UIToolkitDemo
@@ -9,7 +10,8 @@ namespace UIToolkitDemo
     public class GameManager : MonoBehaviour
     {
         public const int MAX_MESSAGES = 30;
-        public GameObject chatPanel, textObjet;
+        public GameObject chatPanel;
+        public GameObject chatMessageObject;
         public TMP_InputField chatBox;
         public CompanionManager CompanionManager;
 
@@ -27,7 +29,7 @@ namespace UIToolkitDemo
             {
                 if (Input.GetKeyDown(KeyCode.Return))
                 {
-                    SendMessageToChat("Player: " + chatBox.text, Message.MessageSender.Player);
+                    SendMessageToChat(chatBox.text, Message.MessageSender.Player);
                     CompanionManager.ContinueConversation(chatBox.text);
                     chatBox.text = "";
                 }                
@@ -50,15 +52,17 @@ namespace UIToolkitDemo
                 _messages.Remove(_messages[0]);
             }
             
-            GameObject newText = Instantiate(textObjet, chatPanel.transform);
+            GameObject newText = Instantiate(chatMessageObject, chatPanel.transform);
 
             var message = new Message();
             
             message.text = text;
             message.sender = sender;
             message.textObj = newText.GetComponent<TextMeshProUGUI>();
-            message.textObj.text = message.text;
-            message.textObj.color = GetColorBySender(message.sender);
+            message.textObj.text = "\n" + message.text;
+            message.senderObj = newText.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+            message.senderObj.color = GetColorBySender(message.sender);
+            message.senderObj.text = message.sender.ToString() + ":";
             
             _messages.Add(message);
         }
@@ -84,6 +88,7 @@ namespace UIToolkitDemo
     public class Message
     {
         public TextMeshProUGUI textObj;
+        public TextMeshProUGUI senderObj;
         public string text;
         public MessageSender sender;
 
