@@ -1,0 +1,153 @@
+.options-bar {
+    flex-direction: row-reverse;
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+
+.options-bar__button {
+    -unity-font-style: bold;
+    color: rgb(236, 240, 241);
+    font-size: 20px;
+    position: relative;
+
+    background-image: url('project://database/Assets/UI/Textures/UI_atlas.psd?fileID=5975499275203342635&guid=68de98d899585b7469e0fb40a0fcbc56&type=3#icon_settings');
+    width: 70px;
+    height: 70px;
+    -unity-background-scale-mode: scale-to-fit;
+    display: none;
+}
+
+.options-bar__button:hover {
+    -unity-background-image-tint-color: rgb(241, 196, 15);
+    transition-duration: 0.25s;
+    scale: 1.1 1.1;
+}
+
+.options-bar__button:active {
+    -unity-background-image-tint-color: rgb(230, 126, 34);
+    background-color: rgb(255, 255, 255);
+}
+
+.options-bar-currency-group-1 {
+    background-color: rgba(44, 62, 80, 0);
+    height: 55%;
+    margin: 0 10px;
+    width: 200px;
+    flex-direction: row;
+    padding: 0;
+}
+
+.options-bar-currency-group-2 {
+    background-color: rgba(44, 62, 80, 0);
+    height: 55%;
+    margin: 0 20px 0 10px;
+    width: 255px;
+    flex-direction: row;
+    padding: 0;
+}
+
+.options-bar-currency-shop-button {
+    position: absolute;
+    right: 3px;
+    top: 5px;
+    width: 53px; 
+    height: 62px; 
+    border-width: 0;
+    padding: 0;
+    background-color: rgba(241, 196, 15, 0); 
+    -unity-font-style: bold;
+    font-size: 25px;
+    color: rgb(255, 255, 255);
+    background-image: url('project://database/Assets/UI/Textures/UI_atlas.psd?fileID=-2104158708707924922&guid=68de98d899585b7469e0fb40a0fcbc56&type=3#bt_01');
+    transition-duration: 0.25s;
+}
+
+.options-bar-currency-shop-button:hover {
+    -unity-background-image-tint-color: rgb(241, 196, 15);
+    transition-duration: 0.25s;
+    scale: 1.1 1.1;
+}
+
+.options-bar-currency-shop-button:active {
+    background-color: rgb(255, 255, 255);
+    -unity-background-image-tint-color: rgb(230, 126, 34);
+    scale: 1.1 1.1;
+}
+
+.options-bar-currency-icon {
+    width: 50px;
+    height: 45px;
+    padding: 0;
+    margin: 0;
+    left: 8px;
+    -unity-background-scale-mode: scale-to-fit;
+    align-self: center;
+}
+
+.options-bar-wallet-icon {
+    width: 50px;
+    height: 50px;
+    padding: 0;
+    margin: 0;
+    left: 8px;
+    -unity-background-scale-mode: scale-to-fit;
+    align-self: center;
+}
+
+/*.options-bar-currency-count {
+    -unity-font-style: normal;
+    color: rgb(255, 255, 255);
+    font-size: 236%;
+    position: absolute;
+    right: 24%;
+    bottom: 9%;
+}*/
+
+.currency-amount-text {
+    flex-grow: 1;
+    flex-shrink: 1;
+    -unity-text-align: middle-right;
+    -unity-font-definition: url('project://database/Assets/UI/Fonts/ChelaOne-Regular%20SDF%201.asset?fileID=11400000&guid=4e008579d9e985040974fa631b2f2b80&type=2#ChelaOne-Regular SDF 1');
+    width: 250px;
+    color: rgb(253, 240, 219);
+    font-size: 38px;
+    margin: 0 10px 0 0;
+    padding: 0;
+}
+
+.wallet-address-text {
+    flex-grow: 1;
+    flex-shrink: 1;
+    -unity-text-align: middle-right;
+    -unity-font-definition: url('project://database/Assets/UI/Fonts/ChelaOne-Regular%20SDF%201.asset?fileID=11400000&guid=4e008579d9e985040974fa631b2f2b80&type=2#ChelaOne-Regular SDF 1');
+    width: 250px;
+    color: rgb(253, 240, 219);
+    font-size: 38px;
+    margin: 0 10px 0 0;
+    padding: 0;
+}
+
+.currency-hud-1 {
+    position: relative;
+    opacity: 1;
+    background-image: url('project://database/Assets/UI/Textures/UI_atlas.psd?fileID=-2609491617324022786&guid=68de98d899585b7469e0fb40a0fcbc56&type=3#Hud_bg_01');
+    -unity-background-image-tint-color: rgba(0, 0, 0, 0.69);
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.currency-hud-2 {
+    position: relative;
+    opacity: 1;
+    background-image: url('project://database/Assets/UI/Textures/UI_atlas.psd?fileID=-2609491617324022786&guid=68de98d899585b7469e0fb40a0fcbc56&type=3#Hud_bg_01');
+    -unity-background-image-tint-color: rgba(0, 0, 0, 0.69);
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.options-button
+{
+    margin-left: 20px;
+    position: relative;
+}
