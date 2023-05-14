@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Text;
 #if UNITY_WEBGL && !UNITY_EDITOR
 using System.Runtime.InteropServices;
@@ -78,19 +77,10 @@ namespace MetaMask.Sockets
             this.socketId = LastSocketId;
         }
 
-        public async Task<(string Response, bool IsSuccessful, string Error)> SendWebRequest(string url, string data, Dictionary<string, string> headers)
+        public async Task<(string Response, bool IsSuccessful, string Error)> SendWebRequest(string url, string data)
         {
             using var uwr = new UnityWebRequest(url, UnityWebRequest.kHttpVerbPOST, new DownloadHandlerBuffer(), new UploadHandlerRaw(Encoding.UTF8.GetBytes(data)));
-
-            if (headers != null)
-            {
-                foreach (var header in headers)
-                {
-                    uwr.SetRequestHeader(header.Key, header.Value);
-                }
-            }
             await uwr.SendWebRequest();
-
             return (uwr.downloadHandler.text, uwr.result == UnityWebRequest.Result.Success, uwr.error);
         }
 

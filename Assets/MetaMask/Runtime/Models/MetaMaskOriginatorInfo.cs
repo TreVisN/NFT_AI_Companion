@@ -15,9 +15,5 @@ namespace MetaMask.Models
         [JsonPropertyName("url")]
         public string Url { get; set; }
 
-        [JsonProperty("platform")]
-        [JsonPropertyName("platform")]
-        public string Platform { get; set; }
-
     }
 }

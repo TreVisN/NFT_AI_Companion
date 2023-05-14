@@ -98,6 +98,12 @@ namespace MetaMask.NativeWebSocket
         {
             this.instanceId = UnityWebSocket_Create(url);
             instances[instanceId] = this;
+
+            UnityWebSocket_SetTextMessageReceivedCallback(this.instanceId, OnTextMessageReceivedCallback);
+            UnityWebSocket_SetBinaryMessageReceivedCallback(this.instanceId, OnBinaryMessageReceivedCallback);
+            UnityWebSocket_SetOpenCallback(this.instanceId, OnOpenedCallback);
+            UnityWebSocket_SetCloseCallback(this.instanceId, OnClosedCallback);
+            UnityWebSocket_SetErrorCallback(this.instanceId, OnErrorCallback);
         }
 
     #endregion
@@ -106,12 +112,6 @@ namespace MetaMask.NativeWebSocket
 
         public Task Connect()
         {
-            UnityWebSocket_SetTextMessageReceivedCallback(this.instanceId, OnTextMessageReceivedCallback);
-            UnityWebSocket_SetBinaryMessageReceivedCallback(this.instanceId, OnBinaryMessageReceivedCallback);
-            UnityWebSocket_SetOpenCallback(this.instanceId, OnOpenedCallback);
-            UnityWebSocket_SetCloseCallback(this.instanceId, OnClosedCallback);
-            UnityWebSocket_SetErrorCallback(this.instanceId, OnErrorCallback);
-
             State = WebSocketState.Connecting;
             UnityWebSocket_Connect(this.instanceId);
 
@@ -198,12 +198,6 @@ namespace MetaMask.NativeWebSocket
 
         void OnInstanceClosed(int code)
         {
-            UnityWebSocket_SetTextMessageReceivedCallback(this.instanceId, null);
-            UnityWebSocket_SetBinaryMessageReceivedCallback(this.instanceId, null);
-            UnityWebSocket_SetOpenCallback(this.instanceId, null);
-            UnityWebSocket_SetErrorCallback(this.instanceId, null);
-            UnityWebSocket_SetCloseCallback(this.instanceId, null);
-
             IsConnected = false;
             State = WebSocketState.Closed;
             OnClose?.Invoke((WebSocketCloseCode)code);

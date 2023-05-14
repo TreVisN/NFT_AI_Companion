@@ -761,19 +761,12 @@ namespace MetaMask.SocketIOClient
         public void Dispose()
         {
             //HttpClient.Dispose();
-            try
-            {
-                this._transport.Dispose();
-                this._ackHandlers.Clear();
-                this._onAnyHandlers.Clear();
-                this._eventHandlers.Clear();
-                this._connectionTokenSource.Cancel();
-                this._connectionTokenSource.Dispose();
-            }
-            catch (Exception e)
-            {
-                UnityEngine.Debug.LogException(e);
-            }
+            this._transport.Dispose();
+            this._ackHandlers.Clear();
+            this._onAnyHandlers.Clear();
+            this._eventHandlers.Clear();
+            this._connectionTokenSource.Cancel();
+            this._connectionTokenSource.Dispose();
         }
     }
 }

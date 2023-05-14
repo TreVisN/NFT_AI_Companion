@@ -168,19 +168,12 @@ namespace MetaMask.SocketIOClient.Transport
 
         public virtual void Dispose()
         {
-            try
+            MessageSubject.Dispose();
+            this._messageQueue.Clear();
+            if (PingTokenSource != null)
             {
-                MessageSubject.Dispose();
-                this._messageQueue.Clear();
-                if (PingTokenSource != null)
-                {
-                    PingTokenSource.Cancel();
-                    PingTokenSource.Dispose();
-                }
-            }
-            catch (Exception e)
-            {
-                UnityEngine.Debug.LogException(e);
+                PingTokenSource.Cancel();
+                PingTokenSource.Dispose();
             }
         }
 
@@ -193,88 +186,74 @@ namespace MetaMask.SocketIOClient.Transport
 
         public void OnError(Exception error)
         {
-            try
-            {
-                MessageSubject.OnError(error);
-            }
-            catch (Exception e)
-            {
-                UnityEngine.Debug.LogException(e);
-            }
+            MessageSubject.OnError(error);
         }
 
         public void OnNext(string text)
         {
-            try
+            Debug.WriteLine($"[Receive] {text}");
+            var msg = MessageFactory.CreateMessage(Options.EIO, text);
+            if (msg == null)
             {
-                Debug.WriteLine($"[Receive] {text}");
-                var msg = MessageFactory.CreateMessage(Options.EIO, text);
-                if (msg == null)
-                {
-                    return;
-                }
-                if (msg.BinaryCount > 0)
-                {
-                    msg.IncomingBytes = new List<byte[]>(msg.BinaryCount);
-                    this._messageQueue.Enqueue(msg);
-                    return;
-                }
-                if (msg.Type == MessageType.Opened)
-                {
-                    OpenAsync(msg as OpenedMessage).ConfigureAwait(false);
-                }
+                return;
+            }
+            if (msg.BinaryCount > 0)
+            {
+                msg.IncomingBytes = new List<byte[]>(msg.BinaryCount);
+                this._messageQueue.Enqueue(msg);
+                return;
+            }
+            if (msg.Type == MessageType.Opened)
+            {
+                OpenAsync(msg as OpenedMessage).ConfigureAwait(false);
+            }
 
-                if (Options.EIO == 3)
+            if (Options.EIO == 3)
+            {
+                if (msg.Type == MessageType.Connected)
                 {
-                    if (msg.Type == MessageType.Connected)
+                    var connectMsg = msg as ConnectedMessage;
+                    connectMsg.Sid = OpenedMessage.Sid;
+                    if ((string.IsNullOrEmpty(Namespace) && string.IsNullOrEmpty(connectMsg.Namespace)) || connectMsg.Namespace == Namespace)
                     {
-                        var connectMsg = msg as ConnectedMessage;
-                        connectMsg.Sid = OpenedMessage.Sid;
-                        if ((string.IsNullOrEmpty(Namespace) && string.IsNullOrEmpty(connectMsg.Namespace)) || connectMsg.Namespace == Namespace)
+                        if (PingTokenSource != null)
                         {
-                            if (PingTokenSource != null)
-                            {
-                                PingTokenSource.Cancel();
-                            }
-                            PingTokenSource = new CancellationTokenSource();
-                            StartPing(PingTokenSource.Token);
+                            PingTokenSource.Cancel();
                         }
-                        else
-                        {
-                            return;
-                        }
+                        PingTokenSource = new CancellationTokenSource();
+                        StartPing(PingTokenSource.Token);
                     }
-                    else if (msg.Type == MessageType.Pong)
+                    else
                     {
-                        var pong = msg as PongMessage;
-                        pong.Duration = DateTime.Now - this._pingTime;
+                        return;
                     }
                 }
-
-                MessageSubject.OnNext(msg);
-
-                if (msg.Type == MessageType.Ping)
+                else if (msg.Type == MessageType.Pong)
                 {
-                    this._pingTime = DateTime.Now;
-                    try
-                    {
-                        SendAsync(new PongMessage(), CancellationToken.None).ConfigureAwait(false);
-                        MessageSubject.OnNext(new PongMessage
-                        {
-                            Eio = Options.EIO,
-                            Protocol = Options.Transport,
-                            Duration = DateTime.Now - this._pingTime
-                        });
-                    }
-                    catch (Exception e)
-                    {
-                        OnError(e);
-                    }
+                    var pong = msg as PongMessage;
+                    pong.Duration = DateTime.Now - this._pingTime;
                 }
             }
-            catch (Exception e)
+
+            MessageSubject.OnNext(msg);
+
+            if (msg.Type == MessageType.Ping)
             {
-                UnityEngine.Debug.LogException(e);
+                this._pingTime = DateTime.Now;
+                try
+                {
+                    SendAsync(new PongMessage(), CancellationToken.None).ConfigureAwait(false);
+                    MessageSubject.OnNext(new PongMessage
+                    {
+                        Eio = Options.EIO,
+                        Protocol = Options.Transport,
+                        Duration = DateTime.Now - this._pingTime
+                    });
+                }
+                catch (Exception e)
+                {
+                    OnError(e);
+                }
             }
         }
 

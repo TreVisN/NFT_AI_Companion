@@ -7,7 +7,7 @@ namespace MetaMask.Cryptography
     {
         #region Constants
 
-#if (UNITY_IOS || UNITY_TVOS || UNITY_WEBGL) && !UNITY_EDITOR
+#if (UNITY_IOS || UNITY_TVOS || UNITY_WEBGL || UNITY_STANDALONE_OSX) && !UNITY_EDITOR
         private const string libraryName = "__Internal";
 #else
         private const string libraryName = "ecies";

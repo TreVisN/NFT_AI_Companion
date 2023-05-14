@@ -193,7 +193,6 @@ namespace MetaMask.Unity
 
                 // Setup the wallet
                 this.wallet = new MetaMaskWallet(this.session, transport, socket, this.config.SocketUrl);
-                this.wallet.AnalyticsPlatform = "unity";
                 this.initialized = true;
             }
             catch (Exception ex)

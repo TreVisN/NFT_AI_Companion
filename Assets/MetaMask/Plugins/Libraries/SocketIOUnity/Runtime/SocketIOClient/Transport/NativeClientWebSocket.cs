@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 
 using MetaMask.NativeWebSocket;
 
+using UnityEngine;
+
 namespace MetaMask.SocketIOClient.Transport
 {
     public class NativeClientWebSocket : IClientWebSocket
@@ -22,7 +24,6 @@ namespace MetaMask.SocketIOClient.Transport
         private WebSocket ws;
 #endif
 
-        private bool _disposed;
         private readonly Subject<string> _textSubject;
         private readonly Subject<byte[]> _bytesSubject;
         private readonly CancellationTokenSource _listenCancellation;
@@ -35,7 +36,6 @@ namespace MetaMask.SocketIOClient.Transport
 
         public NativeClientWebSocket(int eio)
         {
-            _disposed = false;
             this._eio = eio;
             this._textSubject = new Subject<string>();
             this._bytesSubject = new Subject<byte[]>();
@@ -50,6 +50,8 @@ namespace MetaMask.SocketIOClient.Transport
         {
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
             IWebSocket ws = this.bws;
+            ws.OnClose += OnWebSocketCloseNative;
+
 #else
             IWebSocket ws = this.ws;
 #endif
@@ -63,40 +65,36 @@ namespace MetaMask.SocketIOClient.Transport
             UnityThread.executeInUpdate(ListenOnUnityThread);
         }
 
+        private void OnWebSocketCloseNative(WebSocketCloseCode closeCode)
+        {
+            Debug.LogError("Received a Close message-Native");
+        }
+
         private void OnWebSocketClose(WebSocketCloseCode closeCode)
         {
-            if (!_disposed)
-            {
-                this._textSubject.OnError(new WebSocketException("Received a Close message"));
-            }
+            this._textSubject.OnError(new WebSocketException("Received a Close message"));
         }
 
         private void OnWebSocketTextMessageReceived(string data)
         {
-            if (!_disposed)
-            {
-                this._textSubject.OnNext(data);
-            }
+            this._textSubject.OnNext(data);
         }
 
         private void OnWebSocketBinaryMessageReceived(byte[] data)
         {
-            if (!_disposed)
+            int count = data.Length;
+            byte[] bytes;
+            if (this._eio == 3)
             {
-                int count = data.Length;
-                byte[] bytes;
-                if (this._eio == 3)
-                {
-                    bytes = new byte[count - 1];
-                    Buffer.BlockCopy(data, 1, bytes, 0, bytes.Length);
-                }
-                else
-                {
-                    bytes = new byte[count];
-                    Buffer.BlockCopy(data, 0, bytes, 0, bytes.Length);
-                }
-                this._bytesSubject.OnNext(data);
+                bytes = new byte[count - 1];
+                Buffer.BlockCopy(data, 1, bytes, 0, bytes.Length);
             }
+            else
+            {
+                bytes = new byte[count];
+                Buffer.BlockCopy(data, 0, bytes, 0, bytes.Length);
+            }
+            this._bytesSubject.OnNext(data);
         }
 
         public Task ConnectAsync(Uri uri, CancellationToken cancellationToken)
@@ -124,9 +122,7 @@ namespace MetaMask.SocketIOClient.Transport
         public async Task DisconnectAsync(CancellationToken cancellationToken)
         {
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
-            if (this.bws != null && this.bws.IsConnected) { 
-                await this.bws.Close();
-            }
+            await this.bws.Close();
 #else
             await this.ws.Close();
             if (this.ws != null)
@@ -181,7 +177,6 @@ namespace MetaMask.SocketIOClient.Transport
         {
             this._textSubject.Dispose();
             this._bytesSubject.Dispose();
-            _disposed = true;
 
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
             if (this.bws != null)

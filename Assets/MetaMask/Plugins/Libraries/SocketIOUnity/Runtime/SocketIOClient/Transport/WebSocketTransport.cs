@@ -63,14 +63,7 @@ namespace MetaMask.SocketIOClient.Transport
 
         public override async Task DisconnectAsync(CancellationToken cancellationToken)
         {
-            try
-            {
-                await this._ws.DisconnectAsync(cancellationToken);
-            }
-            catch (Exception e)
-            {
-                UnityEngine.Debug.LogException(e);
-            }
+            await this._ws.DisconnectAsync(cancellationToken);
         }
 
         public override async Task SendAsync(Payload payload, CancellationToken cancellationToken)
@@ -90,7 +83,6 @@ namespace MetaMask.SocketIOClient.Transport
 
         public override void Dispose()
         {
-            this._ws.Dispose();
             base.Dispose();
             this._sendLock.Dispose();
         }

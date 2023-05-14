@@ -121,8 +121,6 @@ namespace MetaMask
         /// <summary>Submitted requests dictionary.</summary>
         protected Dictionary<string, MetaMaskSubmittedRequest> submittedRequests = new Dictionary<string, MetaMaskSubmittedRequest>();
 
-        protected string analyticsPlatform = "unknown";
-
         #endregion
 
         #region Properties
@@ -167,19 +165,6 @@ namespace MetaMask
         public bool IsPaused => this.paused;
 
         public bool IsAuthorized => this.authorized;
-
-        /// <summary>Gets or sets the analytics platform.</summary>
-        public string AnalyticsPlatform
-        {
-            get
-            {
-                return this.analyticsPlatform;
-            }
-            set
-            {
-                this.analyticsPlatform = value;
-            }
-        }
 
         #endregion
 
@@ -229,22 +214,22 @@ namespace MetaMask
         }
 
         /// <summary>Sends analytics data to Socket.io server.</summary>
-        /// <param name="analyticsInfo">JSON string with parameters</param>
-        public async void SendAnalytics(MetaMaskAnalyticsInfo analyticsInfo)
+        /// <param name="parameters">JSON string with parameters</param>
+        public async void SendAnalytics(object parameters)
         {
-            string jsonString = JsonConvert.SerializeObject(analyticsInfo);
+            string jsonString = JsonConvert.SerializeObject(parameters);
             MetaMaskDebug.Log("Sending Analytics: " + jsonString);
 
-            var response = await this.socket.SendWebRequest(this.socketUrl.EndsWith("/") ? this.socketUrl + "debug" : this.socketUrl + "/debug", jsonString, new Dictionary<string, string> { { "Content-Type", "application/json" } });
+            var response = await this.socket.SendWebRequest(this.socketUrl + "/debug", jsonString);
             if (response.IsSuccessful)
             {
                 MetaMaskDebug.Log("Analytics sent successfully!");
             }
             else
             {
-                MetaMaskDebug.LogWarning("Sending analytics has failed:");
-                MetaMaskDebug.LogWarning(response.Response);
-                MetaMaskDebug.LogWarning(response.Error);
+                MetaMaskDebug.Log("Sending analytics has failed:");
+                MetaMaskDebug.Log(response.Response);
+                MetaMaskDebug.Log(response.Error);
             }
         }
 
@@ -254,8 +239,7 @@ namespace MetaMask
             var originatorInfo = new MetaMaskOriginatorInfo
             {
                 Title = this.session.Data.AppName,
-                Url = this.session.Data.AppUrl,
-                Platform = this.analyticsPlatform
+                Url = this.session.Data.AppUrl
             };
             var requestInfo = new MetaMaskRequestInfo
             {
@@ -705,6 +689,35 @@ namespace MetaMask
                 return tcs.Task;
             }
         }
+        
+        public Task<JsonElement> Request(MetaMaskEthereumRequest request, string guid)
+        {
+            if (request.Method == "eth_requestAccounts" && !this.connected)
+            {
+                if (this.connectionTcs == null || this.connectionTcs.Task.IsCompleted || (this.connectionTcs.Task.IsCompleted && !this.connected))
+                {
+                    Connect();
+                }
+                return this.connectionTcs.Task;
+            }
+            else if (!this.connected)
+            {
+                throw new Exception("MetaMask Wallet is not connected.");
+            }
+            else
+            {
+                var tcs = new TaskCompletionSource<JsonElement>();
+                var id = guid;
+                var submittedRequest = new MetaMaskSubmittedRequest()
+                {
+                    Method = request.Method,
+                    Promise = tcs
+                };
+                this.submittedRequests.Add(id, submittedRequest);
+                SendEthereumRequest(id, request, ShouldOpenMM(request.Method));
+                return tcs.Task;
+            }
+        }
 
         /// <summary>Connects to the server.</summary>
         public void Connect()
@@ -754,7 +767,6 @@ namespace MetaMask
             this.walletPublicKey = string.Empty;
             this.selectedAddress = string.Empty;
             this.selectedChainId = string.Empty;
-
             this.socket.DisconnectAsync();
             WalletDisconnected?.Invoke(this, EventArgs.Empty);
         }

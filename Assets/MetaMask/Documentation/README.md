@@ -17,11 +17,6 @@ When building the SDK there is a couple of required changes be made to the unity
 - Scripting backend - IL2CPP
 - IL2CPP Code Generation - Faster Smaller Build
 
-### WebGL
-- Navigate to the player settings then navigate to the "Resolution & Presentation Tab" and then choose MetaMask
-- Scripting backend - IL2CPP
-- IL2CPP Code Generation - Faster Smaller Build
-
 ### Android
 - Android Jar Resolver - Must be resolved before attempting build (Assets -> External Dependency Manager -> Android Resolver -> Resolve)
 - Scripting backend - IL2CPP
@@ -198,21 +193,3 @@ This method is used to send a request to the MetaMask app, you can use it to cal
 ## License
 
 Check the `LICENSE` file for more information.
-
-## FAQS
-
-#### When I download the tool from the asset store i can’t find where to install it?
-
-The first stage of the installation process is to navigate to the “tools” then “metamask” menu and you will see install options from there, if you do not see this options make sure you are on the latest unity version and that you have no “red “ errors printed in your console, A case of this menu not appearing is typically associated with incorrect editor initialization which can generally be resolved by restarting the editor or updating your unity version.
-
-#### On IOS why does a popup appear when utilizing a deeplink?
-
-When deeplinking a background service is created to facilitate the communication layer between the  game application and the metamask app, On IOS there is a strict policy on how long a background service may life for before expiring hence why a notification is popped to let you know the socket connection has expired.
-
-#### What does the external dependency manager do?
-The Unity Jar Resolver is a specific external dependency manager for Unity projects that are using external  libraries in their projects.
-It helps manage the dependencies between Unity and external libraries, which can sometimes be complicated due to differences between the two environments.
-This tool is particularly useful for the metamask SDK as on Android and IOS a variety of native libraries are needed to facilitate deeplinking and the persistent socket connection.
-
-#### Does the SDK increase my compilation time?
-No it doesnt , if you are noticing an increased compilation time it may be related to the ILL2CP pipeline which can take longer to build at compile time but the SDK is filled with precompiled libraries to save runtime compilation.

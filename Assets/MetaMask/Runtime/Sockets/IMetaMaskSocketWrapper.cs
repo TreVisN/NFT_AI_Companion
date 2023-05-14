@@ -61,7 +61,7 @@ namespace MetaMask.Sockets
         /// <param name="callback">The callback to remove</param>
         void Off(string eventName, Action<string> callback = null);
 
-        Task<(string Response, bool IsSuccessful, string Error)> SendWebRequest(string url, string data, Dictionary<string, string> headers);
+        Task<(string Response, bool IsSuccessful, string Error)> SendWebRequest(string url, string data);
 
         //void OffAny(Action<string> callback = null);
 
