@@ -17,9 +17,12 @@ namespace UIToolkitDemo
         public TMP_InputField chatBox;
         public CompanionManager CompanionManager;
 
+
+        public GameObject userChatPanel;
+
         public Color PlayerColor, CompanionColor, SystemColor;
 
-        private bool isCompanionJoined = false;
+        private bool sessionStarted = false;
         
         
         [SerializeField]
@@ -38,11 +41,11 @@ namespace UIToolkitDemo
             }
 
 
-            if (!isCompanionJoined && Input.GetKeyDown(KeyCode.Space))
+            if (userChatPanel.activeSelf && !sessionStarted)
             {
                 SendMessageToChat("Conversation started", Message.MessageSender.Sys);
                 CompanionManager.StartConversation();
-                isCompanionJoined = true;
+                sessionStarted = true;
             }
         }
 

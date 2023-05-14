@@ -42,9 +42,6 @@ public class BotScript : MonoBehaviour
         PlayerInput.Instance.ReleaseControl();
         Time.timeScale = 0;
         ChatPanel.SetActive(true);
-        
-        if (Manager.UserId == -1)
-            Manager.StartConversation();
     }
     
     public void CloseChat()
