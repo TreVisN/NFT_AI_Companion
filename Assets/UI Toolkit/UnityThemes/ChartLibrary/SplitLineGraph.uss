@@ -1,6 +1,0 @@
-.split-line-graph {
-    --graph-color: var(--color-team-blue);
-    -unity-background-image-tint-color: var(--color-team-red);
-    border-radius: 10px;
-    overflow: hidden;
-}
