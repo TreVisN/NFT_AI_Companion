@@ -9,7 +9,7 @@ const start_promt =
     "Let's start!" +
     'Player: "Hey!"';
 
-const OPENAI_API_KEY = "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";
+const OPENAI_API_KEY = "";
 
 const app = express();
 const port = 3007;
