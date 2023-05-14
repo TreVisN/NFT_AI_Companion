@@ -1,5 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
+using UIToolkitDemo;
 using UnityEngine;
 
 public class BotScript : MonoBehaviour
@@ -8,14 +11,25 @@ public class BotScript : MonoBehaviour
     public float Smoothness = 5f;
     public Vector3 Offset = new Vector3(0, 0, 0);
     public GameObject ChatPanel;
-    
+    public CompanionManager Manager;
 
-    
+    void Start()
+    {
+        Manager = GetComponent<CompanionManager>();
+    }
+
     void Update()
     {
-        if (Input.GetKey(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.E) && !ChatPanel.GetComponentInChildren<TMP_InputField>().isFocused)
         {
-            OpenChat();
+            if (ChatPanel.activeSelf)
+            {
+                CloseChat();
+            }
+            else
+            {
+                OpenChat();
+            }
         }
         Movement();
         
