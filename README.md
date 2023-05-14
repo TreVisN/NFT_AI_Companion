@@ -1,1 +1,1 @@
-# antares
+# NFT AI Companion
